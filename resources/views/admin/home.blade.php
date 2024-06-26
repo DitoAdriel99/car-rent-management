@@ -42,7 +42,6 @@
                         <form id="delete-car-form-{{ $car->id }}" action="{{ route('cars.delete', ['id' => $car->id]) }}" method="POST">
                             @csrf
                             @method('DELETE')
-                            <!-- Additional form elements or buttons if needed -->
                             <button type="submit" class="btn btn-danger delete-btn">Delete</button>
                         </form>
 
@@ -64,7 +63,7 @@
                             <!-- Form for updating a car -->
                             <form action="{{ route('cars.update', ['id' => $car->id]) }}" method="POST" enctype="multipart/form-data">
                                 @csrf
-                                @method('PUT') <!-- Use PUT method for update -->
+                                @method('PUT')
                                 <div class="form-group">
                                     <label for="brand">Brand</label>
                                     <input type="text" class="form-control" id="brand" name="carBrand" value="{{ $car->brand }}" required>

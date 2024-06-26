@@ -42,10 +42,9 @@ class CarController extends Controller
             'carBrand' => 'required|string|max:255',
             'carModel' => 'required|string|max:255',
             'licensePlate' => 'required|string|max:20|unique:cars,license_plate',
-            'carImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // Validate image file if provided
+            'carImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-       // Handle file upload using storeImage() method from Car model instance
         $imagePath = null;
         if ($request->hasFile('carImage')) {
         $carImage = $request->file('carImage');
@@ -54,7 +53,6 @@ class CarController extends Controller
         }
 
 
-        // Create a new Car instance
         $car = new Car();
         $car->brand = $request->input('carBrand');
         $car->model = $request->input('carModel');
@@ -99,22 +97,18 @@ class CarController extends Controller
             'carImage' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-        // Find the car by ID
         $car = Car::findOrFail($id);
 
-        // Handle file upload using storeImage() method from Car model instance
         if ($request->hasFile('carImage')) {
             $carImage = $request->file('carImage');
             $imagePath = $car->storeImage($carImage);
             $car->image = $imagePath;
         }
 
-        // Update car details
         $car->brand = $request->input('carBrand');
         $car->model = $request->input('carModel');
         $car->license_plate = $request->input('licensePlate');
 
-        // Save the updated car
         $car->save();
 
         return redirect()->route('admin.index')->with('success', 'Car updated successfully!');
@@ -143,10 +137,8 @@ class CarController extends Controller
         $startDate = Carbon::parse($request->input('startDate'));
         $endDate = Carbon::parse($request->input('endDate'));
 
-         // Calculate the number of days
-        $days = $startDate->diffInDays($endDate) + 1; // Include the start date
+        $days = $startDate->diffInDays($endDate) + 1;
 
-        // Calculate the price (300,000 per day)
         $pricePerDay = 300000;
         $totalPrice = $days * $pricePerDay;
 

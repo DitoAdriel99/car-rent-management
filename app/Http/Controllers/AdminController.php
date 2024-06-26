@@ -17,7 +17,6 @@ class AdminController extends Controller
     {
         $query = Car::query();
 
-        // Check if there are search parameters
         if ($request->filled('brand')) {
             $query->where('brand', 'like', '%' . $request->input('brand') . '%');
         }
@@ -30,10 +29,8 @@ class AdminController extends Controller
             $query->where('license_plate', 'like', '%' . $request->input('license_plate') . '%');
         }
 
-        // Retrieve filtered cars
         $cars = $query->where('isActive', 1)->get();
 
-        // Return view with cars data
         return view('admin.home', compact('cars'));
     }
 
@@ -127,27 +124,21 @@ class AdminController extends Controller
 
     public function accept_order($id)
     {
-       // Find the order by its ID
         $order = Order::findOrFail($id);
 
-        // Retrieve all existing orders for the same car
         $existingOrders = Order::where('car_id', $order->car_id)
-                            ->where('status', 'Approve') // Only check approved orders
+                            ->where('status', 'Approve')
                             ->get();
 
-        // Check for any overlapping orders
         foreach ($existingOrders as $existingOrder) {
             if ($this->ordersOverlap($existingOrder, $order)) {
-                // There's a conflict, so abort approval
                 return redirect()->back()->with('error', 'Cannot approve order. Car is still in use within the selected date range.');
             }
         }
 
-        // If no conflicts, update the order status to "Approve"
         $order->status = 'Approve';
         $order->save();
 
-        // Optionally, you can return a response or redirect back
         return redirect()->back()->with('success', 'Order approved successfully!');
     }
 
@@ -158,7 +149,6 @@ class AdminController extends Controller
         $start2 = Carbon::parse($order2->start_date);
         $end2 = Carbon::parse($order2->end_date);
 
-        // Check for overlap
         return $start1 < $end2 && $end1 > $start2;
     }
 

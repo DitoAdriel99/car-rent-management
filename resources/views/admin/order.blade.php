@@ -18,7 +18,6 @@
                         <p class="card-text"><strong>Status:</strong> {{ $order->status }}</p>
                         <button class="btn btn-primary order-btn" data-toggle="modal" onclick="fetchProfile('{{ $order->id }}')" data-target="#penyewa" data-order-id="{{ $order->id }}">Penyewa</button>
                         <button class="btn btn-success terima-btn" onclick="event.preventDefault(); document.getElementById('accept-order-form-{{ $order->id }}').submit();">Terima</button>
-                        <!-- Hidden form to submit the request -->
                         <form id="accept-order-form-{{ $order->id }}" action="{{ route('orders.accept', ['id' => $order->id]) }}" method="GET" style="display: none;">
                             @csrf
                         </form>
@@ -43,7 +42,6 @@
                     </button>
                 </div>
                 <div class="modal-body" id="penyewa-profile">
-                    <!-- Profile details will be loaded here via AJAX -->
                 </div>
             </div>
         </div>
@@ -55,7 +53,6 @@
             url: '/orders/' + orderId + '/profile',
             type: 'GET',
             success: function(response) {
-                // Update modal content with user profile details
                 $('#penyewa-profile').html(`
                     <p><strong>Name:</strong> ${response.name}</p>
                     <p><strong>Address:</strong> ${response.address}</p>

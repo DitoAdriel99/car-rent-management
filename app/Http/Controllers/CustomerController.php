@@ -13,7 +13,6 @@ class CustomerController extends Controller
     {
         $query = Car::query();
 
-        // Check if there are search parameters
         if ($request->filled('brand')) {
             $query->where('brand', 'like', '%' . $request->input('brand') . '%');
         }
@@ -26,15 +25,13 @@ class CustomerController extends Controller
             $query->where('license_plate', 'like', '%' . $request->input('license_plate') . '%');
         }
 
-        // Retrieve filtered cars
         $cars = $query->where('isActive', 1)->get();
         return view('customer.home', compact('cars'));
     }
 
     public function order_list()
     {
-        $user_id = auth()->id(); // Get the authenticated user ID
-        // Join orders with cars and filter by user_id
+        $user_id = auth()->id();
         $orders = Order::select('orders.*', 'cars.brand', 'cars.model', 'cars.license_plate', 'cars.image')
                         ->join('cars', 'orders.car_id', '=', 'cars.id')
                         ->where('orders.user_id', $user_id)
@@ -47,7 +44,7 @@ class CustomerController extends Controller
 
     public function order_return()
     {
-        $user_id = auth()->id(); // Get the authenticated user ID
+        $user_id = auth()->id();
 
         $orders = Order::select('orders.*', 'cars.brand', 'cars.model', 'cars.license_plate', 'cars.image', 'users.name')
                         ->join('cars', 'orders.car_id', '=', 'cars.id')
@@ -72,7 +69,7 @@ class CustomerController extends Controller
 
     public function history_order_cust()
     {
-        $user_id = auth()->id(); // Get the authenticated user ID
+        $user_id = auth()->id();
 
         $orders = Order::select('orders.*', 'cars.brand', 'cars.model', 'cars.license_plate', 'cars.image', 'users.name')
                         ->join('cars', 'orders.car_id', '=', 'cars.id')
